@@ -19,6 +19,6 @@ class splash_activity : AppCompatActivity() {
             }
 
 
-        }, 4200L)
+        }, 1500L)
     }
 }
