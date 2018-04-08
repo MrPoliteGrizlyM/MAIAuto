@@ -108,7 +108,7 @@ public class QuizDbHelper extends SQLiteOpenHelper {
     }
 
     public Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        return myDataBase.query("example", null, null, null, null, null, null);
+        return myDataBase.query(QuizContract.QuestionsTable.TABLE_NAME, null, null, null, null, null, null);
     }
 
     public List<Question> getAllQuestions() {
@@ -120,9 +120,12 @@ public class QuizDbHelper extends SQLiteOpenHelper {
             do {
                 Question question = new Question();
                 question.setQuestion(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_QUESTION)));
+                question.setImage(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_IMAGE)));
                 question.setOption1(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION1)));
                 question.setOption2(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION2)));
                 question.setOption3(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION3)));
+                question.setOption4(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION4)));
+                question.setOption5(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION5)));
                 question.setAnswerNr(c.getInt(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_ANSWER_NR)));
                 questionList.add(question);
             } while (c.moveToNext());

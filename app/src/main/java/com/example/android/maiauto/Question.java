@@ -2,19 +2,25 @@ package com.example.android.maiauto;
 
 public class Question {
     private String question;
+    private String image;
     private String option1;
     private String option2;
     private String option3;
+    private String option4;
+    private String option5;
     private int answerNr;
 
     public Question() {
     }
 
-    public Question(String question, String option1, String option2, String option3, int answerNr) {
+    public Question(String question, String image, String option1, String option2, String option3,String option4,String option5, int answerNr) {
         this.question = question;
+        this.image = image;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
+        this.option4 = option4;
+        this.option5 = option5;
         this.answerNr = answerNr;
     }
 
@@ -24,6 +30,14 @@ public class Question {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getOption1() {
@@ -48,6 +62,22 @@ public class Question {
 
     public void setOption3(String option3) {
         this.option3 = option3;
+    }
+
+    public String getOption4() {
+        return option4;
+    }
+
+    public void setOption4(String option4) {
+        this.option4 = option4;
+    }
+
+    public String getOption5() {
+        return option5;
+    }
+
+    public void setOption5(String option5) {
+        this.option5 = option5;
     }
 
     public int getAnswerNr() {

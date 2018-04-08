@@ -16,8 +16,18 @@ import android.widget.ListView
 import android.widget.TextView
 import com.example.android.maiauto.R.id.message
 import kotlinx.android.synthetic.main.activity_main.*
+import android.R.id.edit
+import android.app.Activity
+import android.content.SharedPreferences
+
+
+
+
 
 class MainActivity : AppCompatActivity() {
+
+
+
 
     val manager = supportFragmentManager
 
@@ -123,11 +133,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setStartTest(visibility: Int){
-        var button = findViewById<Button>(R.id.start_test)
+        val button = findViewById<Button>(R.id.start_test)
+
         if (visibility == 0) {
             button.visibility = View.INVISIBLE
+
         }else {
             button.visibility = View.VISIBLE
+
+
             button.setOnClickListener{
                 val intent = Intent(this, TestActivity::class.java)
                 startActivity(intent)
