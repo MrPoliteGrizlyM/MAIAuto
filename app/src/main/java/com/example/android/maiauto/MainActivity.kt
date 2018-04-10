@@ -27,8 +27,6 @@ import android.content.SharedPreferences
 class MainActivity : AppCompatActivity() {
 
 
-
-
     val manager = supportFragmentManager
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->

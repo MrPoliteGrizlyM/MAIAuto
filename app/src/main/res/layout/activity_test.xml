@@ -24,9 +24,10 @@
                 android:id="@+id/text_view_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ошибок: 0"
+                android:text="Ошибок: 0 из 9"
                 android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:freezesText="true"/>
 
 
             <ImageView
@@ -43,7 +44,8 @@
                 android:text="23. Перечень неисправностей и условий при которых запрещается эксплуатация транспортных средств. Перечень неисправностей и условий при которых запрещается эксплуатация транспортных средств."
                 android:textColor="@android:color/black"
                 android:textSize="21sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:freezesText="true"/>
 
             <RadioGroup
                 android:id="@+id/radio_group"
@@ -55,21 +57,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="Безопасность дорожного движения."/>
+                    android:text="Безопасность дорожного движения."
+                    android:freezesText="true"/>
                 <RadioButton
                     android:id="@+id/radio_button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:text="Перевозка грузов."/>
+                    android:text="Перевозка грузов."
+                    android:freezesText="true"/>
                 <RadioButton
                     android:id="@+id/radio_button3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:text="Учебная езда."/>
+                    android:text="Учебная езда."
+                    android:freezesText="true"/>
 
                 <RadioButton
                     android:id="@+id/radio_button4"
@@ -77,7 +82,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:text="Учебная езда."/>
+                    android:text="Учебная езда."
+                    android:freezesText="true"/>
 
                 <RadioButton
                     android:id="@+id/radio_button5"
@@ -85,8 +91,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:text="Учебная езда."/>
-
+                    android:text="Учебная езда."
+                    android:freezesText="true"/>
 
 
                 <Button
@@ -94,10 +100,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/test_background"
-                    android:text="Button" />
+                    android:background="@drawable/start_background"
+                    android:text="Button"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="18sp"
+                    android:freezesText="true"
+                    android:layout_marginTop="10dp"/>
 
             </RadioGroup>
+
+            <Button
+                android:id="@+id/TEST"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/test_background"
+                android:text="Button"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

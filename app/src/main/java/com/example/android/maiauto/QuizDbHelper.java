@@ -111,8 +111,8 @@ public class QuizDbHelper extends SQLiteOpenHelper {
         return myDataBase.query(QuizContract.QuestionsTable.TABLE_NAME, null, null, null, null, null, null);
     }
 
-    public List<Question> getAllQuestions() {
-        List<Question> questionList = new ArrayList<>();
+    public ArrayList<Question> getAllQuestions() {
+        ArrayList<Question> questionList = new ArrayList<>();
         myDataBase = getReadableDatabase();
         Cursor c = myDataBase.rawQuery("SELECT * FROM " + QuizContract.QuestionsTable.TABLE_NAME, null);
 

@@ -2,42 +2,36 @@ package com.example.android.maiauto
 
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.database.Cursor
 import android.database.SQLException
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-
 import java.io.IOException
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.util.Log
 import java.util.*
-
-import android.content.Intent
-import kotlin.concurrent.timerTask
 import android.os.CountDownTimer
-import android.R.string.cancel
 import android.app.ActionBar
-import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.view.MenuInflater
+import android.util.Log
 import android.widget.*
 
 
 class TestActivity : AppCompatActivity() {
 
     internal var c: Cursor? = null
-    private val COUNTDOWN_IN_MILLIS: Long = 120000
+    private val COUNTDOWN_IN_MILLIS: Long = 60000 * 40
+
+    private val KEY_SCORE = "keyScore"
+    private val KEY_QUESTION_COUNT = "keyQuestionCount"
+    private val KEY_MILLIS_LEFT = "keyMillisLeft"
+    private val KEY_ANSWERED = "keyAnswered"
+    private val KEY_QUESTION_LIST = "keyQuestionList"
 
 
     private var textViewQuestion: TextView? = null
     private var textViewScore: TextView? = null
 
-    private var textViewCountDown: TextView? = null
     private var rbGroup: RadioGroup? = null
     private var rb1: RadioButton? = null
     private var rb2: RadioButton? = null
@@ -56,7 +50,7 @@ class TestActivity : AppCompatActivity() {
     private var countDownTimer: CountDownTimer? = null
     private var timeLeftInMillis: Long = 0
 
-    private var questionList: List<Question>? = null
+    private var questionList: ArrayList<Question>? = null
     private var questionCounter: Int = 0
     private var questionCountTotal: Int = 0
     private var currentQuestion: Question? = null
@@ -100,13 +94,17 @@ class TestActivity : AppCompatActivity() {
         textColorDefaultCd = textTimeBar!!.getTextColors();
 
 
-        timeLeftInMillis = COUNTDOWN_IN_MILLIS
-        startCountDown()
 
 
-        val myDbHelper = QuizDbHelper(this@TestActivity)
 
-        try {
+
+        if (savedInstanceState == null) {
+
+            val myDbHelper = QuizDbHelper(this@TestActivity)
+
+
+
+            try {
                 myDbHelper.createDataBase()
             } catch (ioe: IOException) {
                 throw Error("Unable to create database")
@@ -119,18 +117,47 @@ class TestActivity : AppCompatActivity() {
             }
 
 
-        questionList = myDbHelper.getAllQuestions();
+            questionList = myDbHelper.getAllQuestions();
 
 
-
-        // Log.d("mes", questionList!!.get(0).option1.toString())
-
-
-        questionCountTotal = questionList!!.size
-        Collections.shuffle(questionList)
+            Collections.shuffle(questionList)
 
 
-        showNextQuestion()
+            val questionList : List<Question> = questionList!!.subList(0,40)
+
+            questionCountTotal = questionList.size
+
+            showNextQuestion()
+
+            timeLeftInMillis = COUNTDOWN_IN_MILLIS
+            startCountDown()
+
+        } else {
+            questionList = savedInstanceState.getParcelableArrayList(KEY_QUESTION_LIST)
+            val questionList : List<Question> = questionList!!.subList(0,40)
+            questionCountTotal = questionList.size
+            questionCounter = savedInstanceState.getInt(KEY_QUESTION_COUNT)
+            currentQuestion = questionList.get(questionCounter - 1)
+            score = savedInstanceState.getInt(KEY_SCORE)
+            timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT)
+            answered = savedInstanceState.getBoolean(KEY_ANSWERED)
+
+
+            currentImage = "image" + currentQuestion!!.image
+            imageQuestion!!.setImageResource(getResourceId(currentImage!!, "drawable", getPackageName()))
+
+
+            checkRadioButtons()
+
+            if (!answered) {
+                startCountDown();
+            } else {
+                updateCountDownText();
+                showSolution();
+            }
+
+
+        }
 
         buttonConfirmNext!!.setOnClickListener(View.OnClickListener {
             if (!answered) {
@@ -189,30 +216,14 @@ class TestActivity : AppCompatActivity() {
         if (questionCounter < questionCountTotal  &&  buttonConfirmNext!!.text != "Завершить") {
             currentQuestion = questionList?.get(questionCounter)
 
-            rb3!!.visibility = View.VISIBLE
-            rb4!!.visibility = View.VISIBLE
-            rb5!!.visibility = View.VISIBLE
+            checkRadioButtons()
 
-
-            if (currentQuestion!!.option3 == null){
-                rb3!!.visibility = View.INVISIBLE
-                rb4!!.visibility = View.INVISIBLE
-                rb5!!.visibility = View.INVISIBLE
-            }
-            else if (currentQuestion!!.option4 == null){
-                rb4!!.visibility = View.INVISIBLE
-                rb5!!.visibility = View.INVISIBLE
-            }
-            else if (currentQuestion!!.option5 == null){
-                rb5!!.visibility = View.INVISIBLE
-            }
-
-            textViewQuestion!!.setText(currentQuestion!!.getQuestion())
-            rb1!!.setText(currentQuestion!!.getOption1())
-            rb2!!.setText(currentQuestion!!.getOption2())
-            rb3!!.setText(currentQuestion!!.getOption3())
-            rb4!!.setText(currentQuestion!!.getOption4())
-            rb5!!.setText(currentQuestion!!.getOption5())
+            textViewQuestion!!.text = currentQuestion!!.getQuestion()
+            rb1!!.text = currentQuestion!!.getOption1()
+            rb2!!.text = currentQuestion!!.getOption2()
+            rb3!!.text = currentQuestion!!.getOption3()
+            rb4!!.text = currentQuestion!!.getOption4()
+            rb5!!.text = currentQuestion!!.getOption5()
 
 
             currentImage = "image" + currentQuestion!!.image
@@ -236,6 +247,26 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkRadioButtons() {
+
+        rb3!!.visibility = View.VISIBLE
+        rb4!!.visibility = View.VISIBLE
+        rb5!!.visibility = View.VISIBLE
+
+        if (currentQuestion!!.option3 == null){
+            rb3!!.visibility = View.INVISIBLE
+            rb4!!.visibility = View.INVISIBLE
+            rb5!!.visibility = View.INVISIBLE
+        }
+        else if (currentQuestion!!.option4 == null){
+            rb4!!.visibility = View.INVISIBLE
+            rb5!!.visibility = View.INVISIBLE
+        }
+        else if (currentQuestion!!.option5 == null){
+            rb5!!.visibility = View.INVISIBLE
+        }
+    }
+
     private fun startCountDown() {
         countDownTimer = object : CountDownTimer(timeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -248,7 +279,7 @@ class TestActivity : AppCompatActivity() {
                 updateCountDownText()
                 checkAnswer()
                 //Toast.makeText(this@TestActivity, "Время вышло", Toast.LENGTH_SHORT).show()
-                textViewScore!!.setText("Ошибок: $score")
+                textViewScore!!.setText("Ошибок: $score из 9")
                 buttonConfirmNext!!.setText("Завершить")
 
             }
@@ -264,7 +295,7 @@ class TestActivity : AppCompatActivity() {
         textTimeBar!!.setText(timeFormatted)
         textQuestionBar!!.setText("Вопрос: $questionCounter/$questionCountTotal")
 
-        if (timeLeftInMillis < 60000) {
+        if (timeLeftInMillis < (60000 * 10)) {
             textTimeBar!!.setTextColor(Color.RED)
         } else {
             textTimeBar!!.setTextColor(textColorDefaultCd)
@@ -283,15 +314,15 @@ class TestActivity : AppCompatActivity() {
         val answerNr = rbGroup!!.indexOfChild(rbSelected) + 1
 
         if (answerNr != currentQuestion!!.getAnswerNr()) {
-            if (score == 1){ // 2 errors -> end
+            if (score == 8){ // 9 errors -> end
                 Toast.makeText(this, "Вы все еще не готовы", Toast.LENGTH_SHORT).show()
                 score++
-                textViewScore!!.setText("Ошибок: $score")
+                textViewScore!!.setText("Ошибок: $score из 9")
                 countDownTimer!!.cancel()
                 buttonConfirmNext!!.setText("Завершить")
             } else {
                 score++
-                textViewScore!!.setText("Ошибок: $score")
+                textViewScore!!.setText("Ошибок: $score из 9")
             }
         }
 
@@ -310,23 +341,23 @@ class TestActivity : AppCompatActivity() {
         when (currentQuestion!!.getAnswerNr()) {
             1 -> {
                 rb1!!.setTextColor(Color.GREEN)
-                textViewQuestion!!.setText("Ответ №1 правильный")
+
             }
             2 -> {
                 rb2!!.setTextColor(Color.GREEN)
-                textViewQuestion!!.setText("Ответ №2 правильный")
+
             }
             3 -> {
                 rb3!!.setTextColor(Color.GREEN)
-                textViewQuestion!!.setText("Ответ №3 правильный")
+
             }
             4 -> {
-                rb3!!.setTextColor(Color.GREEN)
-                textViewQuestion!!.setText("Ответ №4 правильный")
+                rb4!!.setTextColor(Color.GREEN)
+
             }
             5 -> {
-                rb3!!.setTextColor(Color.GREEN)
-                textViewQuestion!!.setText("Ответ №5 правильный")
+                rb5!!.setTextColor(Color.GREEN)
+
             }
         }
 
@@ -338,6 +369,7 @@ class TestActivity : AppCompatActivity() {
     }
 
     private fun finishQuiz() {
+        countDownTimer!!.cancel()
         finish()
     }
 
@@ -358,10 +390,20 @@ class TestActivity : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_SCORE, score)
+        outState.putInt(KEY_QUESTION_COUNT, questionCounter)
+        outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
+        outState.putBoolean(KEY_ANSWERED, answered)
+        outState.putParcelableArrayList(KEY_QUESTION_LIST, questionList)
+    }
 
 
 
 
 
+
+// for file in *.jpg; do mv "$file" "image${file//-/_}"; done
 
 }
