@@ -136,6 +136,33 @@ public class QuizDbHelper extends SQLiteOpenHelper {
 
 
         }
+
+    public ArrayList<Question> getTopicQuestions(String index) {
+        ArrayList<Question> questionList = new ArrayList<>();
+        myDataBase = getReadableDatabase();
+        Cursor c = myDataBase.rawQuery("SELECT * FROM " + QuizContract.QuestionsTable.TABLE_NAME + " WHERE TOPIC = " + index, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Question question = new Question();
+                question.setQuestion(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_QUESTION)));
+                question.setImage(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_IMAGE)));
+                question.setOption1(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION1)));
+                question.setOption2(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION2)));
+                question.setOption3(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION3)));
+                question.setOption4(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION4)));
+                question.setOption5(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_OPTION5)));
+                question.setAnswerNr(c.getInt(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_ANSWER_NR)));
+                question.setHint(c.getString(c.getColumnIndex(QuizContract.QuestionsTable.COLUMN_HINT)));
+                questionList.add(question);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        return questionList;
+
+
+    }
 }
 
 

@@ -30,12 +30,20 @@
         <activity
             android:name=".TestActivity"
             android:label="TestActivity">
-            <!--android:configChanges="orientation|keyboardHidden"-->
 
+            <!-- android:configChanges="orientation|keyboardHidden" -->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+
+        <activity android:name=".TopicActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
         </activity>
     </application>
 

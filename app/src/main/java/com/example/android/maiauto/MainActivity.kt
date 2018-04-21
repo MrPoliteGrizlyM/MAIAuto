@@ -10,18 +10,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import com.example.android.maiauto.R.id.message
 import kotlinx.android.synthetic.main.activity_main.*
 import android.R.id.edit
 import android.app.Activity
 import android.content.SharedPreferences
-
-
-
+import android.widget.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -94,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItem(p0: Int): Any {
-            return "TEST"
+            return themes.get(p0)
         }
 
 
@@ -125,6 +119,39 @@ class MainActivity : AppCompatActivity() {
         }else{
             listView.adapter = MyCustomAdapter(this )
             listView.visibility = View.VISIBLE
+
+            listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                val intent = Intent(this@MainActivity, TopicActivity::class.java)
+                intent.putExtra("TopicName", listView.getItemAtPosition(i).toString())
+                if ((i+1) < 5) {
+                    intent.putExtra("TopicInt", (i + 1).toString())
+                }else{
+                    when (i+1) {
+                        5 -> {
+                            intent.putExtra("TopicInt", "5.1")
+                        }
+                        6 -> {
+                            intent.putExtra("TopicInt", "5.2")
+                        }
+                        7 -> {
+                            intent.putExtra("TopicInt", "5.3")
+                        }
+                        8 -> {
+                            intent.putExtra("TopicInt", "5.4")
+                        }
+                        9 -> {
+                            intent.putExtra("TopicInt", "5.5")
+                        }
+                        10 -> {
+                            intent.putExtra("TopicInt", "5.6")
+                        }
+                        else -> {
+                            intent.putExtra("TopicInt", (i - 4).toString())
+                        }
+                    }
+                }
+                startActivity(intent)
+            }
         }
 
 

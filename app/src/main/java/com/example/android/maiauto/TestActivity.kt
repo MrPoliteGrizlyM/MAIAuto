@@ -254,16 +254,16 @@ class TestActivity : AppCompatActivity() {
         rb5!!.visibility = View.VISIBLE
 
         if (currentQuestion!!.option3 == null){
-            rb3!!.visibility = View.INVISIBLE
-            rb4!!.visibility = View.INVISIBLE
-            rb5!!.visibility = View.INVISIBLE
+            rb3!!.visibility = View.GONE
+            rb4!!.visibility = View.GONE
+            rb5!!.visibility = View.GONE
         }
         else if (currentQuestion!!.option4 == null){
-            rb4!!.visibility = View.INVISIBLE
-            rb5!!.visibility = View.INVISIBLE
+            rb4!!.visibility = View.GONE
+            rb5!!.visibility = View.GONE
         }
         else if (currentQuestion!!.option5 == null){
-            rb5!!.visibility = View.INVISIBLE
+            rb5!!.visibility = View.GONE
         }
     }
 
