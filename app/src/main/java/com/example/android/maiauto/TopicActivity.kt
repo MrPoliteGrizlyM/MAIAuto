@@ -50,6 +50,8 @@ class TopicActivity : AppCompatActivity() {
     private var questionCountTotal: Int = 0
     private var currentQuestion: Question? = null
     private var buttonConfirmNext: Button? = null
+    private var buttonNext: Button? = null
+    private var buttonPrev: Button? = null
     private var buttonHint: Button? = null
 
     private var answered: Boolean = false
@@ -70,6 +72,8 @@ class TopicActivity : AppCompatActivity() {
         textHint = findViewById(R.id.hintText)
         //textQuestion = findViewById(R.id.textQuestion)
         buttonConfirmNext = findViewById(R.id.button_confirm_next)
+        buttonNext = findViewById(R.id.next)
+        buttonPrev = findViewById(R.id.prev)
         buttonHint = findViewById(R.id.hintButton)
         textViewQuestion = findViewById(R.id.text_view_question)
         imageQuestion= findViewById(R.id.image_question)
@@ -86,8 +90,6 @@ class TopicActivity : AppCompatActivity() {
         bundle = intent.extras
         textTopic = bundle!!.getString("TopicName")
         textInt = bundle!!.getString("TopicInt")
-
-        Log.d("Mes", textInt)
 
 
         textTopicBar!!.setText(textTopic)
@@ -119,6 +121,8 @@ class TopicActivity : AppCompatActivity() {
 
             questionCountTotal = questionList!!.size
 
+            buttonPrev!!.visibility = View.INVISIBLE
+
             showNextQuestion()
         } else {
             questionList = savedInstanceState.getParcelableArrayList(KEY_QUESTION_LIST)
@@ -146,6 +150,8 @@ class TopicActivity : AppCompatActivity() {
                 showSolution()
             }
 
+            checkTopButtons()
+
         }
 
         buttonConfirmNext!!.setOnClickListener(View.OnClickListener {
@@ -163,6 +169,19 @@ class TopicActivity : AppCompatActivity() {
 
         hintButton!!.setOnClickListener(View.OnClickListener {
             showHint()
+
+        })
+
+        buttonNext!!.setOnClickListener(View.OnClickListener {
+            showNextQuestion()
+            checkTopButtons()
+
+        })
+
+        buttonPrev!!.setOnClickListener(View.OnClickListener {
+            questionCounter -= 2
+            showNextQuestion()
+            checkTopButtons()
 
         })
 
@@ -209,6 +228,8 @@ class TopicActivity : AppCompatActivity() {
 
             questionCounter++
 
+            checkTopButtons()
+
             textRightBar!!.setText("Вопрос: $questionCounter/$questionCountTotal")
 
 
@@ -220,6 +241,27 @@ class TopicActivity : AppCompatActivity() {
         } else {
             finishQuiz()
         }
+    }
+
+    private fun checkTopButtons(){
+        if (questionCounter != 1){
+            buttonPrev!!.visibility = View.VISIBLE
+        }
+
+        if (questionCounter != questionCountTotal){
+            buttonNext!!.visibility = View.VISIBLE
+        }
+
+        if (questionCounter == 1 ){
+            buttonPrev!!.visibility = View.INVISIBLE
+        }
+
+        buttonNext!!.visibility = View.VISIBLE
+
+        if (questionCounter == questionCountTotal){
+            buttonNext!!.visibility = View.INVISIBLE
+        }
+
     }
 
     private fun showSolution() {
@@ -317,6 +359,11 @@ class TopicActivity : AppCompatActivity() {
         outState.putBoolean(KEY_ANSWERED, answered)
         outState.putBoolean(KEY_HINT, hint)
         outState.putParcelableArrayList(KEY_QUESTION_LIST, questionList)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
 }

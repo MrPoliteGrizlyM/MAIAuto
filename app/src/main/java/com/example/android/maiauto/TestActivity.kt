@@ -399,8 +399,10 @@ class TestActivity : AppCompatActivity() {
         outState.putParcelableArrayList(KEY_QUESTION_LIST, questionList)
     }
 
-
-
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
 
 
 
